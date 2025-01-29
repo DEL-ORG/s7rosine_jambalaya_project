@@ -1,17 +1,18 @@
 pipeline {
-    agent {
-        label 'Slave' // Use the label of the Jenkins slave agent
-    }
+    agent any
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker_cred')
         IMAGE_TAG = "V1.0.${BUILD_NUMBER}" // Set the image tag dynamically
     }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '20'))
         disableConcurrentBuilds()
-        timeout(time: 60, unit: 'MINUTES')
+        timeout(time: 15, unit: 'MINUTES')
         timestamps()
     }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -22,14 +23,16 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh """
-                docker build -t rosinebelle/springboot/s7rosine_jambalaye:${IMAGE_TAG} .
+                docker build -t rosinebelle/springboot/s7rosine_jambalaya:${IMAGE_TAG} .
                 """
             }
         }
 
         stage('Login to DockerHub') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                withCredentials([usernamePassword(credentialsId: 'docker_cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                }
             }
         }
 
@@ -59,6 +62,7 @@ pipeline {
         // }
 
     }
+
     post {
         success {
             echo "Docker image built and pushed successfully. ArgoCD will handle deployment."
