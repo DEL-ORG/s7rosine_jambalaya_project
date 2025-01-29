@@ -3,7 +3,7 @@ pipeline {
         label 'Slave' // Use the label of the Jenkins slave agent
     }
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-cred')
+        DOCKERHUB_CREDENTIALS = credentials('docker_cred')
         IMAGE_TAG = "V1.0.${BUILD_NUMBER}" // Set the image tag dynamically
     }
     options {
