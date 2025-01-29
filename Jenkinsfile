@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'slave-node' // Use the label of the Jenkins slave agent
+        label 'Slave' // Use the label of the Jenkins slave agent
     }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-cred')
