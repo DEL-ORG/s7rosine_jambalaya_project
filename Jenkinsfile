@@ -41,22 +41,24 @@ pipeline {
             }
         }
 
-    //     stage('Update Helm Repo for ArgoCD') {
-    //         steps {
-    //             sh """
-    //             rm -rf s7rosine_jambalaya || true
-    //             git clone -b prod git@github.com:DEL-ORG/s7rosine_jambalaya_project.git
-    //             cd ${WORKSPACE}/springboot/s7rosine_jambalaya
-    //             sed -i 's/tag:.*/tag: ${IMAGE_TAG}/' ./chart/values.yaml
-    //             git config user.email "rosinemuku@yahoo.com"
-    //             git config user.name "rosinebelle"
-    //             git add ./chart/values.yaml
-    //             git commit -m "Update image tag to ${IMAGE_TAG}"
-    //             git push origin prod
-    //             """
-    //         }
-    //     }
-    // }
+        // Uncomment the following stage for Helm repo update if needed
+        // stage('Update Helm Repo for ArgoCD') {
+        //     steps {
+        //         sh """
+        //         rm -rf s7rosine_jambalaya || true
+        //         git clone -b prod git@github.com:DEL-ORG/s7rosine_jambalaya_project.git
+        //         cd ${WORKSPACE}/springboot/s7rosine_jambalaya
+        //         sed -i 's/tag:.*/tag: ${IMAGE_TAG}/' ./chart/values.yaml
+        //         git config user.email "rosinemuku@yahoo.com"
+        //         git config user.name "rosinebelle"
+        //         git add ./chart/values.yaml
+        //         git commit -m "Update image tag to ${IMAGE_TAG}"
+        //         git push origin prod
+        //         """
+        //     }
+        // }
+
+    }
     post {
         success {
             echo "Docker image built and pushed successfully. ArgoCD will handle deployment."
