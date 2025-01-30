@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh """
-                docker build -t rosinebelle/springboot/s7rosine_jambalaya:${IMAGE_TAG} .
+                docker build -t rosinebelle/s7rosine_jambalaya:${IMAGE_TAG} .
                 """
             }
         }
@@ -39,9 +39,11 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 sh """
-                docker push rosinebelle/springboot/s7rosine_jambalaya:${IMAGE_TAG}
+                docker push rosinebelle/s7rosine_jambalaya:${IMAGE_TAG}
                 """
             }
+        }
+
         }
 
         // Uncomment the following stage for Helm repo update if needed
