@@ -44,8 +44,6 @@ pipeline {
             }
         }
 
-        }
-
         // Uncomment the following stage for Helm repo update if needed
         // stage('Update Helm Repo for ArgoCD') {
         //     steps {
@@ -63,7 +61,7 @@ pipeline {
         //     }
         // }
 
-    }
+    } // <-- Properly closing the 'stages' block here
 
     post {
         success {
