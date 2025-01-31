@@ -44,7 +44,7 @@ pipeline {
             }
         }
 
-        Uncomment the following stage for Helm repo update if needed
+        // Uncomment the following stage for Helm repo update if needed
         stage('Update Helm Repo for ArgoCD') {
             steps {
                 sh """
