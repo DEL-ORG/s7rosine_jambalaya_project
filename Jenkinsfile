@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh """
                 rm -rf s7rosine_jambalaya || true
-                git clone -b prod git@github.com:DEL-ORG/s7rosine_jambalaya_project.git
+                git clone -b prod git@github.com:https://github.com/DEL-ORG/s7rosine_jambalaya_project.git
                 cd ${WORKSPACE}/springboot/s7rosine_jambalaya_project
                 sed -i 's/tag:.*/tag: ${IMAGE_TAG}/' ./chart/values.yaml
                 git config user.email "rosinemuku@yahoo.com"
