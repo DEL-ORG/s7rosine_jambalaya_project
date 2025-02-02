@@ -56,7 +56,7 @@ pipeline {
             }
         }
 
-        Uncomment if SonarQube analysis is needed
+
         stage('SonarQube Analysis') {
             agent {
                 docker { image 'sonarsource/sonar-scanner-cli:5.0.1' }
