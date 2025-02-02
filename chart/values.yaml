@@ -1,6 +1,6 @@
 image:
   repository: rosinebelle/s7rosine_jambalaya
-  tag: V1.0.54
+  tag: V1.0.55
   pullPolicy: IfNotPresent
 
 replicaCount: 2
