@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker_cred')
-        IMAGE_TAG = "V1.0.${BUILD_NUMBER}" // Set the image tag dynamically
+        IMAGE_TAG = "V1.0.${env.BUILD_NUMBER}" // Corrected reference to env variable
     }
 
     options {
@@ -16,14 +16,14 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm // Fetch the code from the repository
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 sh """
-                docker build -t rosinebelle/s7rosine_jambalaya:${IMAGE_TAG} .
+                docker build -t rosinebelle/s7rosine_jambalaya:${env.IMAGE_TAG} .
                 """
             }
         }
@@ -39,29 +39,55 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 sh """
-                docker push rosinebelle/s7rosine_jambalaya:${IMAGE_TAG}
+                docker push rosinebelle/s7rosine_jambalaya:${env.IMAGE_TAG}
                 """
             }
         }
 
-        // Uncomment the following stage for Helm repo update if needed
+        stage('Testing') {
+            agent {
+                docker { image 'maven:3.8.4-eclipse-temurin-17-alpine' }
+            }
+            steps {
+                sh '''
+                cd s7rosine_jambalaya
+                mvn test
+                '''
+            }
+        }
+
+        Uncomment if SonarQube analysis is needed
+        stage('SonarQube Analysis') {
+            agent {
+                docker { image 'sonarsource/sonar-scanner-cli:5.0.1' }
+            }
+            environment {
+                CI = 'true'
+                scannerHome = '/opt/sonar-scanner'
+            }
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
         stage('Update Helm Repo for ArgoCD') {
             steps {
                 sh """
                 rm -rf s7rosine_jambalaya || true
                 git clone -b main git@github.com:DEL-ORG/s7rosine_jambalaya_project.git
-                cd ${WORKSPACE}/springboot/s7rosine_jambalaya_project
-                sed -i 's/tag:.*/tag: ${IMAGE_TAG}/' ./chart/values.yaml
+                cd s7rosine_jambalaya_project
+                sed -i 's/tag:.*/tag: ${env.IMAGE_TAG}/' ./chart/values.yaml
                 git config user.email "rosinemuku@yahoo.com"
                 git config user.name "rosinebelle"
                 git add ./chart/values.yaml
-                git commit -m "Update image tag to ${IMAGE_TAG}"
-                git push origin prod
+                git commit -m "Update image tag to ${env.IMAGE_TAG}"
+                git push origin main
                 """
             }
         }
-
-    } // <-- Properly closing the 'stages' block here
+    } // Properly closed the 'stages' block
 
     post {
         success {
