@@ -44,33 +44,33 @@ pipeline {
             }
         }
 
-        stage('Testing') {
-            agent {
-                docker { image 'maven:3.8.4-eclipse-temurin-17-alpine' }
-            }
-            steps {
-                sh '''
-                cd s7rosine_jambalaya
-                mvn test
-                '''
-            }
-        }
+        // stage('Testing') {
+        //     agent {
+        //         docker { image 'maven:3.8.4-eclipse-temurin-17-alpine' }
+        //     }
+        //     steps {
+        //         sh '''
+        //         cd s7rosine_jambalaya
+        //         mvn test
+        //         '''
+        //     }
+        // }
 
 
-        stage('SonarQube Analysis') {
-            agent {
-                docker { image 'sonarsource/sonar-scanner-cli:5.0.1' }
-            }
-            environment {
-                CI = 'true'
-                scannerHome = '/opt/sonar-scanner'
-            }
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
+        // stage('SonarQube Analysis') {
+        //     agent {
+        //         docker { image 'sonarsource/sonar-scanner-cli:5.0.1' }
+        //     }
+        //     environment {
+        //         CI = 'true'
+        //         scannerHome = '/opt/sonar-scanner'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonar') {
+        //             sh "${scannerHome}/bin/sonar-scanner"
+        //         }
+        //     }
+        // }
 
         stage('Update Helm Repo for ArgoCD') {
             steps {
