@@ -75,7 +75,7 @@ pipeline {
         stage('Update Helm Repo for ArgoCD') {
             steps {
                 sh """
-                rm -rf s7rosine_jambalaya || true
+                rm -rf s7rosine_jambalaya_project || true
                 git clone -b main git@github.com:DEL-ORG/s7rosine_jambalaya_project.git
                 cd s7rosine_jambalaya_project
                 sed -i 's/tag:.*/tag: ${env.IMAGE_TAG}/' ./chart/values.yaml
